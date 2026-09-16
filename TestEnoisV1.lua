@@ -186,6 +186,8 @@ header.Text=""
 header.AutoButtonColor=false
 header.Parent=holder
 local hc=Instance.new("UICorner");hc.CornerRadius=UDim.new(0,8);hc.Parent=header
+local contentHeight=0
+local isExpanded=false
 local titleLbl=Instance.new("TextLabel")
 titleLbl.BackgroundTransparency=1
 titleLbl.Size=UDim2.new(1,-60,1,0)
@@ -223,25 +225,34 @@ if builderFn then
 local okB,errB=pcall(builderFn,inner)
 if not okB then warn("[EnoisClient] "+title+": "+tostring(errB)) end
 end
-task.defer(function()
-task.wait(0.05)
+task.spawn(function()
+task.wait(0.1)
 local contentH=layout.AbsoluteContentSize.Y
+if contentH<=0 then
+contentH=0
+for _,ch in ipairs(inner:GetChildren()) do
+if ch:IsA("GuiObject") and not ch:IsA("UIListLayout") and not ch:IsA("UIPadding") then
+contentH=contentH+ch.AbsoluteSize.Y+6
+end
+end
+end
 inner.Size=UDim2.new(1,-16,0,contentH)
 holder.Size=UDim2.new(1,0,0,44)
-holder.expanded=false
-holder.contentH=contentH
+isExpanded=false
+contentHeight=contentH
+print("[EnoisClient] module '"..title.."' contentH="..contentH)
 end)
 header.MouseEnter:Connect(function() tw(header,0.15,{BackgroundColor3=CARD_H}) end)
 header.MouseLeave:Connect(function() tw(header,0.15,{BackgroundColor3=CARD}) end)
 header.MouseButton1Click:Connect(function()
-local h=holder.contentH or 0
-if holder.expanded then
-holder.expanded=false
+local h=contentHeight
+if isExpanded then
+isExpanded=false
 tw(holder,0.3,{Size=UDim2.new(1,0,0,44)},Enum.EasingStyle.Quart,Enum.EasingDirection.In)
 tw(arrow,0.3,{Rotation=180})
 tw(arrow,0.3,{TextColor3=MUTED})
 else
-holder.expanded=true
+isExpanded=true
 tw(holder,0.35,{Size=UDim2.new(1,0,0,44+h+6)},Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
 tw(arrow,0.3,{Rotation=0})
 tw(arrow,0.3,{TextColor3=ACC})
