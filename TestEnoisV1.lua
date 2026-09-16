@@ -522,8 +522,8 @@ bl.ZIndex=6;bl.Parent=btn
 task.spawn(function()
     task.wait(0.35)
     for _, l in ipairs(letters) do
-        tw(l, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Cubic) 
-        tw(l, 0.5, {Position = UDim2.fromOffset(0, 0)})
+        tw(l, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Cubic) -- заменили 1 на l
+        tw(l, 0.5, {Position = UDim2.fromOffset(0, 0)})         -- заменили 1 на l
         task.wait(0.1)
     end
 end)
