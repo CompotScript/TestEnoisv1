@@ -59,29 +59,44 @@ local C={}
 function C.Toggle(parent,label,default,cb)
 local state=default or false
 local row=Instance.new("Frame")
-row.Size=UDim2.new(1,0,0,34);row.BackgroundColor3=INNER
+row.Size=UDim2.new(1,0,0,36);row.BackgroundColor3=INNER
 row.BorderSizePixel=0;row.Parent=parent
 local rc=Instance.new("UICorner");rc.CornerRadius=UDim.new(0,6);rc.Parent=row
+local stroke=Instance.new("UIStroke");stroke.Color=Color3.fromRGB(60,60,70);stroke.Thickness=1;stroke.Transparency=1;stroke.Parent=row
 local lbl=Instance.new("TextLabel")
-lbl.BackgroundTransparency=1;lbl.Size=UDim2.new(1,-70,1,0)
+lbl.BackgroundTransparency=1;lbl.Size=UDim2.new(1,-80,1,0)
 lbl.Position=UDim2.new(0,12,0,0);lbl.Font=Enum.Font.GothamMedium
 lbl.TextSize=13;lbl.TextColor3=WHITE;lbl.TextXAlignment=Enum.TextXAlignment.Left
 lbl.Text=label;lbl.Parent=row
-local box=Instance.new("Frame")
-box.Size=UDim2.fromOffset(34,18);box.Position=UDim2.new(1,-46,0.5,0)
-box.AnchorPoint=Vector2.new(0,0.5);box.BackgroundColor3=Color3.fromRGB(45,45,52)
-box.BorderSizePixel=0;box.Parent=row
-local bc=Instance.new("UICorner");bc.CornerRadius=UDim.new(1,0);bc.Parent=box
+local track=Instance.new("Frame")
+track.Size=UDim2.fromOffset(40,20);track.Position=UDim2.new(1,-54,0.5,0)
+track.AnchorPoint=Vector2.new(0,0.5);track.BackgroundColor3=Color3.fromRGB(45,45,52)
+track.BorderSizePixel=0;track.ClipsDescendants=true;track.Parent=row
+local tc=Instance.new("UICorner");tc.CornerRadius=UDim.new(1,0);tc.Parent=track
 local knob=Instance.new("Frame")
-knob.Size=UDim2.fromOffset(14,14);knob.Position=UDim2.new(0,2,0.5,0)
+knob.Size=UDim2.fromOffset(16,16);knob.Position=UDim2.new(0,2,0.5,0)
 knob.AnchorPoint=Vector2.new(0,0.5);knob.BackgroundColor3=WHITE
-knob.BorderSizePixel=0;knob.Parent=box
+knob.BorderSizePixel=0;knob.Parent=track
 local kc=Instance.new("UICorner");kc.CornerRadius=UDim.new(1,0);kc.Parent=knob
 local function apply(v,anim)
 state=v
-local tp=v and UDim2.new(1,-16,0.5,0) or UDim2.new(0,2,0.5,0)
-local tc=v and ACC or Color3.fromRGB(45,45,52)
-if anim~=false then tw(knob,0.2,{Position=tp});tw(box,0.2,{BackgroundColor3=tc}) else knob.Position=tp;box.BackgroundColor3=tc end
+local tp=v and UDim2.new(1,-18,0.5,0) or UDim2.new(0,2,0.5,0)
+local tc_on=Color3.fromRGB(100,170,255)
+local tc_off=Color3.fromRGB(45,45,52)
+if anim~=false then
+tw(knob,0.25,{Position=tp},Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
+tw(track,0.25,{BackgroundColor3=v and tc_on or tc_off},Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
+if v then
+tw(stroke,0.25,{Transparency=0.3,Color=Color3.fromRGB(100,170,255)})
+tw(row,0.25,{BackgroundColor3=Color3.fromRGB(24,24,30)})
+else
+tw(stroke,0.25,{Transparency=1})
+tw(row,0.25,{BackgroundColor3=INNER})
+end
+else
+knob.Position=tp
+track.BackgroundColor3=v and tc_on or tc_off
+end
 if cb then cb(v) end
 end
 apply(state,false)
@@ -89,8 +104,12 @@ local btn=Instance.new("TextButton")
 btn.BackgroundTransparency=1;btn.Size=UDim2.fromScale(1,1);btn.Text=""
 btn.Parent=row
 btn.MouseButton1Click:Connect(function() apply(not state,true) end)
-btn.MouseEnter:Connect(function() tw(row,0.15,{BackgroundColor3=Color3.fromRGB(20,20,26)}) end)
-btn.MouseLeave:Connect(function() tw(row,0.15,{BackgroundColor3=INNER}) end)
+btn.MouseEnter:Connect(function()
+if not state then tw(row,0.15,{BackgroundColor3=Color3.fromRGB(20,20,26)}) end
+end)
+btn.MouseLeave:Connect(function()
+if not state then tw(row,0.15,{BackgroundColor3=INNER}) end
+end)
 return{set=apply,get=function() return state end}
 end
 function C.Slider(parent,label,min,max,default,cb)
