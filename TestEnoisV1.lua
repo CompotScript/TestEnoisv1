@@ -1,7 +1,7 @@
 local TS=game:GetService("TweenService")
 local MS=game:GetService("MarketplaceService")
 local UIS=game:GetService("UserInputService")
-local CG=game:GetService("CoreGui")
+local CG=game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local ok,info=pcall(function() return MS:GetProductInfo(game.PlaceId) end)
 local nameOk=ok and info and info.Name and string.find(string.lower(info.Name),"bloxstrike",1,true)
 if game.PlaceId~=114234929420007 and not nameOk then warn("[EnoisClient] не BloxStrike");return end
