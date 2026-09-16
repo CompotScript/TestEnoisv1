@@ -526,7 +526,7 @@ tw(l,0.4,{TextTransparency=0},Enum.EasingStyle.Cubic)
 tw(l,0.5,{Position=UDim2.fromOffset(0,0)})
 task.wait(0.1)
 end
-task.wait(0
+task.wait(0)
 end
 task.wait(0.4)
 tw(wl,0.6,{TextTransparency=0})
