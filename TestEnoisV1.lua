@@ -531,7 +531,7 @@ task.wait(0.4)
 tw(wl, 0.6, {TextTransparency = 0})
 tw(btn, 0.6, {BackgroundTransparency = 0.85})
 tw(bs, 0.6, {Transparency = 0.4})
-tw(b1, 0.6, {TextTransparency = 0}
+tw(bl, 0.6, {TextTransparency = 0})
 btn.MouseButton1Click:Connect(function()
 tw(wl,0.3,{TextTransparency=1})
 tw(bl,0.3,{TextTransparency=1})
